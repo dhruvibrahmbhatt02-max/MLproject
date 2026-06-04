@@ -1,3 +1,4 @@
+from src.components import data_transformation
 import os 
 import sys
 # exception
@@ -5,6 +6,10 @@ from src.exception import CustomException
 # logging
 from src.logger import logging
 import pandas as pd 
+
+from src.components.data_transformation import DataTransformation
+from src.components.data_transformation import DataTransformationConfig
+
 
 from sklearn.model_selection import train_test_split
 from dataclasses import dataclass
@@ -26,7 +31,7 @@ class DataIngestion:
     def initate_data_ingestion(self):
         logging.info("Enter the data ingestion method or component")
         try:
-            # any file you can perfrom by just changing this file path 
+            # any fil can perfrom by just changing this file path 
             df=pd.read_csv("data/stud.csv")
             logging.info("read the dataset as dataframe")
 
@@ -42,16 +47,17 @@ class DataIngestion:
             
             logging.info("ingestion of the data is completed")
 
-            return{
+            return(
                 self.ingestion_config.train_data_path,
                 self.ingestion_config.test_data_path
-            }
+            )
         except Exception as e:
             raise CustomException(e,sys)
 
 
 if __name__=="__main__":
     obj=DataIngestion()
-    obj.initate_data_ingestion()
+    train_data,test_data=obj.initate_data_ingestion()
 
-    
+    data_transformation=DataTransformation()
+    data_transformation.initiate_data_transformation(train_data,test_data)
